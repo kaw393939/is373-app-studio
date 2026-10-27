@@ -128,6 +128,9 @@ The coach uses `python3 studio.py issue --lesson APP-001 --open` to open the
 prepared GitHub form; without `--open` it prints the URL. After you create the
 issue, it records the actual URL with `--url`; `--pr` records the actual PR.
 No extra GitHub CLI is required. Template copies do not inherit instructor issues.
+CI prepares clean environments. Wait for both `check` and `windows` in the PR;
+after merging, wait for its main-branch checks before checking progress. Pending
+CI is a wait, not a reason to clone again or rebuild the feature.
 `python3 studio.py status --lesson APP-001` names the next recorded checkpoint;
 it neither grades nor performs a merge or issue closure. It checks whether a
 record is present, not whether its reasoning is correct. The coach must leave
@@ -151,3 +154,6 @@ evidence. Your template copy uses `main`, which keeps the student starting point
 protections when the accounts and roles lessons reach them. No production
 deployment, password recovery, email verification, payment system or extra
 application feature is required in these three lessons.
+
+[Instructor orientation and evaluation records](docs/instructor.md) are optional
+background; students start with this README.
