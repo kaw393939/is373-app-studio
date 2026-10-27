@@ -25,6 +25,11 @@ With the coach, use a test account to compare member and admin behavior. A role
 change must take effect for existing sessions as specified; do not trust an old
 role claim or a browser control to decide current access.
 
+After that account exists, the coach helps you run the trusted command in a
+second terminal in this clone, using the same local database as the app:
+`python3 studio.py user role YOUR-TEST-USERNAME --role admin`.
+Use `--role member` to change it back. This changes local data, not a hosted server.
+
 ## Check
 
 AI runs full APP-003 cumulative checks and reviews the boundary. Compare actual

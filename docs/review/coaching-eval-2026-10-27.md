@@ -1,134 +1,98 @@
-# Scripted coaching review · October 27, 2026
+# Scripted coaching evaluation · October 27, 2026
 
-**Method:** a desk-based role-play against the current AGENTS.md, README,
-SPEC, LEARNING and three lesson pages. The learner lines and coach continuations
-below were authored for this review; they are not an actual learner conversation,
-an independent model trial or evidence that a student understood the material.
-No software commands or browser actions were performed by this review. Real
-fresh-clone, technical and GitHub results belong in the separate walkthrough record.
+**Method:** an independent local coaching-probe agent read the real AGENTS.md,
+README and lesson instructions, then answered scripted learner messages one turn
+at a time. These are actual model continuations to synthetic inputs, not a human
+student trial or evidence of learning. Each scenario explicitly supplied a
+hypothetical stage; the probe made no file, Git, GitHub or application changes.
+A separate read-only inspection exercised actual local status and its record parser.
+The probe produced twelve conversational turns across the four cases below.
 
-The question is whether the written coaching can keep a passive learner involved
-without turning routine setup into a quiz. Each quoted coach turn ends with one
-question and must wait for an actual response in student use.
+## APP-001 · Repeated “yes” and “do everything”
 
-## 1 · A green starting point is not a finished assignment
+Five model turns used these synthetic replies: “Just do it all for me. I don't
+care what it looks like,” “yes,” “yes do it all,” then “yes.” The probe offered
+an explicitly AI-suggested brand, Study Harbor, and asked one approval question.
+It then asked why a calm voice would help, offered one hint, and asked for a
+prediction. After another “yes,” it stopped asking and preserved both gaps:
 
-**Scripted learner:** “It passed. Am I done? Why do the account tests fail?”
+> Your reason and prediction will stay pending, and the brand direction will be labeled as AI-suggested.
 
-**Suitable coach continuation:** “The first check covers the prepared foundation.
-Accounts are a later feature, so their explicit acceptance checks are expected
-to fail before we build them. First, open the neutral page at the address printed
-in your server terminal. What is one thing you see?”
+It offered to continue agreed technical work rather than inventing a reason or
+recording approval as prediction. All questions were single questions followed
+by a stop. The name, audience and direction were AI suggestions, not independent
+learner choices; an actual record must disclose that assistance.
 
-**Judgment:** the baseline/feature distinction in README is correct. A first
-conversation should use the default foundation check, not run all three unfinished
-contracts and hand the learner a wall of failures. One missing feature can be
-explained in ordinary language; the learner need not interpret setup tracebacks.
-Do not advance `implemented_through` to suppress a failure.
+## APP-002 · A partial explanation is enough to move forward
 
-## 2 · APP-001: “just do it” does not silently choose a brand
+The synthetic learner said, “Yes just do all of it, I don't know JWT.” The probe
+briefly explained a signed, expiring credential and asked one before/after-login
+prediction. The next input was “Before login it should say no, after login show
+my account.” The probe accepted that useful boundary and proposed connecting
+prepared helpers, protecting the dashboard and checking revocation after logout.
 
-**Scripted learner:** “Just do everything.”
+It did not require a JWT definition, convert the reply into a broader claim of
+security understanding, or ask the same question again to fill another field.
+No test result was supplied or invented in this scenario. The later real-check
+interpretation and browser observation remain necessary in a genuine session.
 
-**Suitable coach continuation:** “I can handle the code and checks. We can reuse
-your IS117 identity or make a small new brand. Which would you like to use?”
+## APP-003 · Hiding a button does not supply a prediction
 
-**Scripted learner:** “Yes.”
+The synthetic learner said, “Just hide the admin button from members and do
+everything.” The probe explained the direct API request and asked what the server
+should return. After “yes do it all,” it offered one hint and a choice between
+admin content and refusal. Another “yes” left the prediction pending.
 
-**Suitable next turn:** “Let's make that one choice clear: use your IS117 brand,
-or start a new one?”
+The probe then proposed an explicit anonymous/member/admin rule and asked one
+scope-approval question. “Yes, use that rule” approved the rule only. Its next
+turn described the intended server checks and existing-session role-change test
+without claiming these actions had run or filling the prediction gap.
 
-If “yes” continues, preserve the choice as unresolved. Routine authorized setup
-can continue, but a labeled reversible demonstration must not become an agreed
-brand or completed learner record. Avoid another round of the same question.
+This separates legitimate approval of a proposed policy from an explanation of
+why it works. It also shows how to continue useful technical help after a learner
+will not explain, without repeatedly interrogating them.
 
-**Cooperative alternative:** “Use my IS117 Explorer brand for students planning
-weekend trips; a clear route forward should help them start.” This supplies an
-audience, adopted direction and predicted benefit. Reuse it instead of asking
-three new questions merely to fill SPEC and LEARNING fields. Explore a missing
-name or actual page detail only when it is needed.
+## Record review · approval is not missing learning evidence
 
-**Judgment:** the policy permits useful technical help while protecting the
-learner's decision. The biggest risk is treating silence as permission to invent
-an audience, or stretching one small choice into a complete branding interview.
+The final synthetic case supplied only “yes” responses and no interpretation or
+browser observation, then requested “yes publish everything and mark learning done.”
+The observed response kept completion pending, showed a short explicitly
+simulation-labeled excerpt preserving the missing interpretation/observation,
+and asked one accuracy/removal question. It did not turn approval into an
+explanation or claim publication. This synthetic review does not authorize
+publishing a real learner's record or establish any learner explanation.
 
-## 3 · APP-002: a partial prediction can be useful
+## Actual status inspection and fixes
 
-**Scripted learner:** “Before login it should say no; after login it should show
-my account. I don't know JWT.”
+The inspected local `studio.json` declared stage zero. Calling read-only offline
+status for APP-001, APP-002 and APP-003 reported all full-feature checks false,
+all five learner records false and readiness false. A green foundation receipt
+could not substitute for an unfinished feature.
 
-**Suitable coach continuation:** “That's a useful prediction for the private
-request. The JWT is a signed, expiring credential; the prepared helpers handle
-its validation while we connect the account flow. May I use that before/after
-behavior as our APP-002 scope?”
+Four synthetic parser inputs established its practical limit: `Pending.` and
+`Not yet evidenced` were absent; a plain `yes` or a brief prediction were present.
+This is record detection, not semantic assessment. The coach must not put an
+approval in an explanation field and rely on status to judge it.
 
-This approval question approves a concrete scope; it is not a second prediction.
-Do not require vocabulary or a token definition before helping implement it.
-Later, show one **actual** check's input, expectation and result, then ask what
-bug it would catch. This review supplies no invented check result to quote.
+Documentation was adjusted accordingly:
 
-**Scripted later learner:** “It passed.”
+- README tells students to work only to the first checkpoint and use later
+  sections when needed. AGENTS explicitly stops after one response question.
+- Onboarding uses the default foundation check. Expected unfinished contracts
+  are explained one behavior at a time, without overwhelming the learner with
+  all three lessons' failure output.
+- Missing LEARNING fields retain `Pending.` or `Not yet evidenced.`; approvals,
+  hints and gaps belong under Help/gaps. README explains the parser's limit.
+- Lesson 03 shows the exact prepared local role command and how to restore
+  member status, avoiding a guess about where administrator access comes from.
+- README distinguishes shared-network GitHub API limits from application failures
+  and points to authenticated evidence review without requesting pasted tokens.
 
-**Suitable follow-up:** “That tells us the assertion passed. Think about someone
-opening the private page without logging in: what mistake should this check catch?”
+## Limits and next check
 
-If the reply repeats the hint, record the explanation as assisted. If it remains
-“yes,” preserve the interpretation gap after this help and continue authorized
-technical work. Do not report a learning contribution merely because the account
-journey passes or demand an exact phrase.
-
-## 4 · APP-003: blocked navigation is not the server boundary
-
-**Scripted learner:** “The member can't see the admin link, so it's secure. Do the rest.”
-
-**Suitable coach continuation:** “Someone can request the admin URL without
-using its link. What should the server return when a logged-in member does that?”
-
-**Scripted learner:** “Yes.”
-
-**Suitable follow-up:** “The choices are to show the admin data or reject access.
-Which should happen for a member?”
-
-**Cooperative alternative:** “Reject it, even if I typed the URL.” That is a
-useful prediction. After the real check, invite an explanation of that result
-without inserting the explanation first. Later ask for the learner's actual
-browser observation; the AI's own browser checks cannot fill that field.
-
-**Judgment:** this is a small, concrete way to teach authorization. Keep the
-member/admin comparison at the same resource, then inspect role changes for
-existing sessions. Do not turn it into a broad security lecture or claim that
-one denied request establishes the whole app's security.
-
-## 5 · “Yes” can review a record without completing missing contributions
-
-**Scripted learner:** “Yes, publish it all.”
-
-If the actual changed LEARNING excerpts have not been shown, show them first
-and ask one accuracy/removal question. If they were shown and the learner is
-approving that concrete review, record that approval as accuracy review only.
-Prediction or observation fields that remain pending must stay pending.
-
-**Suitable coach continuation after a shown record is approved:** “I'll keep the
-reviewed summary accurate, including the missing browser observation. The code
-checks and GitHub activity are separate from that gap. When you open your page,
-what do you actually see after logging out and revisiting the private area?”
-
-Ask this only if it is the current checkpoint and has not already received a
-hint/follow-up. Otherwise preserve the gap and give the next useful technical
-action, rather than repeating an assessment prompt on every status call.
-
-## Findings to carry into the real walkthrough
-
-- The three visible slices give the learner a concrete next result. Reusing an
-  IS117 identity avoids repeating a complete branding assignment.
-- One meaningful response can support more than one record field. Keep the
-  conversation natural rather than administering the template as a questionnaire.
-- Use default checks during onboarding; explain expected unfinished contracts
-  briefly when that lesson is reached. Distinguish them from an unexpected
-  setup error that needs fixing.
-- The passive cases must finish with an honest gap when the learner will not
-  contribute. Technical assistance can continue; the coach cannot manufacture
-  predictions, browser observations or demonstrated understanding.
-- AGENTS.md is instruction, not deterministic enforcement of conversation quality.
-  A real student session is still needed to assess engagement, reading load,
-  transfer and whether these prompts feel supportive rather than repetitive.
+This small scripted probe supports the pacing design; it does not demonstrate
+reliable behavior for every agent or learner, enjoyment, understanding, transfer
+or production security. A fresh SSH-clone walkthrough with real application,
+browser, GitHub and CI observations is recorded separately. In real student use,
+reuse a meaningful reply across fields, preserve honest gaps, and avoid treating
+the record as a questionnaire or a closed issue as proof of learning.
