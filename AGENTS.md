@@ -149,7 +149,9 @@ interpretation or observation field. Status detects record presence, not the
 meaning or correctness of a response; an approval cannot fill those fields.
 
 Show new/changed learner excerpts for accuracy/removal review BEFORE their first
-commit/push, and again after later changes. Approval confirms record accuracy,
+commit/push, and again after later changes. Keep later previews to the new
+learner words and help/gaps; do not reread unchanged fields or repeat the full
+onboarding notice each lesson. One brief accuracy question is enough. Approval confirms record accuracy,
 not understanding. Keep unreviewed changes local and unstaged while other authorized
 work continues. Explain that later edits do not erase published Git history.
 Never commit secrets, local SQLite data, signing keys, environments or raw browser/session dumps.

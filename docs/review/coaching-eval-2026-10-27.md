@@ -96,3 +96,18 @@ or production security. A fresh SSH-clone walkthrough with real application,
 browser, GitHub and CI observations is recorded separately. In real student use,
 reuse a meaningful reply across fields, preserve honest gaps, and avoid treating
 the record as a questionnaire or a closed issue as proof of learning.
+
+## Full-walkthrough follow-up
+
+The separate synthetic learner, after all three real software/GitHub cycles,
+reported that repeated LEARNING accuracy reviews felt most repetitive. The long
+simulation disclaimers were specific to this evaluation, but the teaching rule
+now explicitly keeps later previews to new learner words and help/gaps, reuses
+the onboarding notice, and asks one brief accuracy question. Publication review
+remains required. This is model feedback, not measured student engagement.
+
+A later synthetic probe reread the revised accuracy-review instruction at APP-003.
+Given one new prediction and one assistance note, the model showed those two
+excerpts, then asked one accuracy/removal question. It did not repeat the onboarding
+notice, reread unchanged fields, claim learning or continue past the question.
+This verifies one model continuation, not guaranteed coaching behavior or human engagement.

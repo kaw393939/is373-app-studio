@@ -36,6 +36,8 @@ AI runs full APP-003 cumulative checks and reviews the boundary. Compare actual
 unauthenticated rejection, member rejection and admin success at the same protected
 resource. Test a direct API request as well as navigation, plus a role change
 with an existing session. Earlier account/browser behavior must still pass.
+After a role change, refresh the protected page to make another request. An
+already drawn page does not update itself when the database changes.
 
 Explain one actual allowed/denied check. Then try the member/admin browser
 experience yourself and name one observation. Use a throwaway local account;
