@@ -477,3 +477,56 @@ def test_role_command_reenters_virtualenv_even_when_python_is_symlinked(
             "admin",
         ]
     ]
+
+
+@pytest.mark.parametrize(
+    "remote,next_action,unwanted",
+    [
+        (
+            {
+                "ci": False,
+                "merged": True,
+                "issue_state": "closed",
+                "checks": {"check": None, "windows": None},
+            },
+            "wait for pending check/windows jobs",
+            "close the lesson issue",
+        ),
+        (
+            {"ci": True, "merged": False, "issue_state": "open"},
+            "decide whether to merge",
+            "close the lesson issue",
+        ),
+        (
+            {
+                "ci": False,
+                "merged": True,
+                "issue_state": "closed",
+                "checks": {"check": "success", "windows": "failure"},
+            },
+            "inspect the failed or skipped check/windows job",
+            "close the lesson issue",
+        ),
+        (
+            {"ci": True, "merged": True, "issue_state": "open"},
+            "close the lesson issue",
+            "decide whether to merge",
+        ),
+    ],
+)
+def test_progress_names_the_actual_remaining_publication_step(
+    capsys, remote, next_action, unwanted
+):
+    result = {
+        "lesson": "APP-001",
+        "checks": {"current": True},
+        "learner_records": {name: True for name in progress.CHECKPOINTS},
+        "publication": {"tracked": True, "clean": True, "revision_matches": True},
+        "github": {"issue": True, "pr": True, "details": [], **remote},
+        "ready_for_instructor_review": False,
+    }
+    progress.display(result)
+    output = capsys.readouterr().out
+    assert next_action in output
+    assert unwanted not in output
+    assert "Evidence ready for instructor review" not in output
