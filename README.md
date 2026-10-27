@@ -11,6 +11,9 @@ Start locally here. Deployment into your existing server is a later agreed step.
 
 ## Start here · on your laptop
 
+Work only to the first checkpoint for now. The later sections are references
+for the coach to introduce when you need them.
+
 1. On [this template](https://github.com/kaw393939/is373-app-studio), choose
    **Use this template → Create a new repository**. Create a public copy named
    `my-app-studio` in your own account; leave **Include all branches** off.
@@ -56,7 +59,8 @@ Saved Python changes restart the development app. Saved template, CSS and
 JavaScript changes refresh the browser automatically. Unsaved edits do not
 appear. A refresh can clear an unsent form. Press **Ctrl+C** in the running
 terminal to stop it. For a plain preview, stop first and use
-`python3 studio.py run --plain`; refresh the browser yourself after saving.
+`python3 studio.py run --plain`. Refresh after template/CSS edits; after Python
+edits, stop and restart the app too.
 If the port is occupied, let the coach identify your earlier server or use
 `python3 studio.py run --port 8001` and its printed address. Do not stop unrelated programs.
 
@@ -122,7 +126,13 @@ prepared GitHub form; without `--open` it prints the URL. After you create the
 issue, it records the actual URL with `--url`; `--pr` records the actual PR.
 No extra GitHub CLI is required. Template copies do not inherit instructor issues.
 `python3 studio.py status --lesson APP-001` names the next recorded checkpoint;
-it neither grades nor performs a merge or issue closure.
+it neither grades nor performs a merge or issue closure. It checks whether a
+record is present, not whether its reasoning is correct. The coach must leave
+missing explanations pending rather than filling them with an approval like “yes.”
+On a shared class network, GitHub's API limit can leave status unverified even
+when the signed-in browser works. Ask the coach to inspect the real issue, PR
+and CI through an authenticated connector/browser; do not paste tokens or treat
+that access limit as an application failure.
 
 ## Worked examples · when useful
 

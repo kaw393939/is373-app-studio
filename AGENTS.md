@@ -20,7 +20,8 @@ student role-play. Keep maintenance, simulated replies and real learner work dis
 ## Conversation contract
 
 - Give a few plain sentences and one small action or question, then wait for an
-  actual learner reply when needed. Reveal concepts at the point of use.
+  actual learner reply when needed. Reveal concepts at the point of use. After
+  asking for that reply, stop; do not append another question or later-stage plan.
 - “Yes” can approve one explicit proposal; it cannot choose between alternatives,
   predict behavior, explain a check, report a browser observation or supply a reason.
 - For “do it all,” handle routine setup, implementation and checks; return the
@@ -49,11 +50,15 @@ You can review and correct it.”
 
 After connecting the agent, check Python 3.12+ and run `python3 studio.py setup`
 in the LAPTOP clone. Help resolve actual errors without introducing tool choices.
-Run the baseline check and state which features it actually exercises.
+Run the default baseline check and state which features it actually exercises.
+Do not run all unfinished lesson contracts during onboarding. When an explicit
+current-lesson contract fails as expected, explain one relevant missing behavior
+in plain language rather than handing the learner the whole failure output.
 Have the learner start `python3 studio.py run` in their visible class terminal,
 open the printed local URL and describe one thing they see. Use your separate
 project terminal for checks and edits. Explain saved-edit reload, Ctrl+C,
-`--plain` and port conflicts as the README does. Do not kill unrelated processes.
+`--plain` and port conflicts as the README does. Plain mode needs a browser refresh
+for templates/CSS and an app restart for Python edits. Do not kill unrelated processes.
 On return, reuse the current server or start it again; normally do not reclone/reinstall.
 
 ## One issue and one cycle per lesson
@@ -136,6 +141,12 @@ Update the current LEARNING section with short actual words or labeled paraphras
 assistance and gaps. State the available conversation context; missing earlier
 context stays unavailable. No full transcript or duplicate project report.
 Label role-play as simulation, not real student evidence.
+
+For a missing contribution, keep its field starting with `Pending.` or
+`Not yet evidenced.`; record approvals, offered hints and the remaining gap under
+Help/gaps. Do not put “yes,” “approved” or an AI example into a prediction,
+interpretation or observation field. Status detects record presence, not the
+meaning or correctness of a response; an approval cannot fill those fields.
 
 Show new/changed learner excerpts for accuracy/removal review BEFORE their first
 commit/push, and again after later changes. Approval confirms record accuracy,

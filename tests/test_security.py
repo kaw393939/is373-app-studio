@@ -1,6 +1,7 @@
 """Deterministic checks for the prepared security tools, before feature work starts."""
 
 import os
+import ctypes
 from pathlib import Path
 import re
 import subprocess
@@ -23,6 +24,57 @@ from app.settings import Settings
 PASSPHRASE = "an example only passphrase 42"
 
 
+def _canonical_windows_principal(sid):
+    """Let Windows canonicalize its own SID aliases, such as runneradmin's LA."""
+    security_api = ctypes.WinDLL("advapi32", use_last_error=True)
+    kernel_api = ctypes.WinDLL("kernel32", use_last_error=True)
+    descriptor = ctypes.c_void_p()
+    text = ctypes.c_wchar_p()
+    security_api.ConvertStringSecurityDescriptorToSecurityDescriptorW.argtypes = [
+        ctypes.c_wchar_p,
+        ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_void_p),
+        ctypes.c_void_p,
+    ]
+    security_api.ConvertSecurityDescriptorToStringSecurityDescriptorW.argtypes = [
+        ctypes.c_void_p,
+        ctypes.c_uint32,
+        ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_wchar_p),
+        ctypes.c_void_p,
+    ]
+    kernel_api.LocalFree.argtypes = [ctypes.c_void_p]
+    kernel_api.LocalFree.restype = ctypes.c_void_p
+    try:
+        if not security_api.ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            f"D:P(A;;FA;;;{sid})", 1, ctypes.byref(descriptor), None
+        ):
+            return None
+        if not security_api.ConvertSecurityDescriptorToStringSecurityDescriptorW(
+            descriptor, 1, 4, ctypes.byref(text), None
+        ):
+            return None
+        entries = re.findall(r"\(([^()]+)\)", text.value)
+        return entries[0].split(";")[-1] if len(entries) == 1 else None
+    finally:
+        if text:
+            kernel_api.LocalFree(ctypes.cast(text, ctypes.c_void_p))
+        if descriptor:
+            kernel_api.LocalFree(descriptor)
+
+
+def _matches_private_dacl(contents, principal):
+    entries = re.findall(r"\(([^()]+)\)", contents)
+    return (
+        principal is not None
+        and len(entries) == 1
+        and bool(re.search(r"D:[A-Z]*P", contents))
+        and entries[0].split(";")[0] == "A"
+        and entries[0].split(";")[2] == "FA"
+        and entries[0].split(";")[-1] == principal
+    )
+
+
 def _has_private_permissions(path):
     """Use actual owner-only DACL evidence on Windows, never POSIX mode bits."""
     if os.name != "nt":
@@ -38,16 +90,29 @@ def _has_private_permissions(path):
         )
         if result.returncode:
             return False
-        contents = export.read_text(encoding="utf-16")
+        # icacls /save emits UTF-16 little-endian, sometimes without a BOM.
+        contents = export.read_bytes().decode("utf-16-le").lstrip("\ufeff")
     sid = private_files._windows_user_sid()
-    entries = re.findall(r"\(([^()]+)\)", contents)
-    return (
-        len(entries) == 1
-        and bool(re.search(r"D:[A-Z]*P", contents))
-        and entries[0].split(";")[0] == "A"
-        and entries[0].split(";")[2] == "FA"
-        and entries[0].split(";")[-1] == sid
-    )
+    return _matches_private_dacl(contents, _canonical_windows_principal(sid))
+
+
+@pytest.mark.parametrize(
+    "contents,principal,expected",
+    [
+        ("D:PAI(A;;FA;;;LA)", "LA", True),
+        ("D:P(A;;FA;;;S-1-5-21-1-2-3-1001)", "S-1-5-21-1-2-3-1001", True),
+        ("D:P(A;;FA;;;BA)", "LA", False),
+        ("D:P(A;;FA;;;LA)(A;;FA;;;BA)", "LA", False),
+        ("D:AI(A;;FA;;;LA)", "LA", False),
+        ("D:P(A;;FR;;;LA)", "LA", False),
+        ("D:P(D;;FA;;;LA)", "LA", False),
+    ],
+)
+def test_acl_evidence_requires_only_the_exact_owner_with_full_access(
+    contents, principal, expected
+):
+    """Accept a canonical owner alias without accepting groups or extra access."""
+    assert _matches_private_dacl(contents, principal) is expected
 
 
 @pytest.fixture(name="security_settings")
@@ -227,6 +292,17 @@ def test_cross_origin_and_bad_csrf_do_not_mutate(security_client):
         == 403
     )
     assert security_client.get("/logout").status_code == 405
+
+
+def test_non_ascii_csrf_header_is_rejected_without_a_server_error(security_client):
+    """Malformed header bytes must fail closed before constant-time comparison."""
+    _csrf(security_client)
+    response = security_client.post(
+        "/signup",
+        json={"username": "learner", "password": PASSPHRASE},
+        headers=[(b"X-CSRF-Token", "é".encode("utf-8"))],
+    )
+    assert response.status_code == 403
 
 
 def test_login_rotates_session_and_logout_rejects_copied_jwt(
