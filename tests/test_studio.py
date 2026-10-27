@@ -3,6 +3,7 @@
 import argparse
 import io
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -248,9 +249,39 @@ def test_occupied_port_is_not_taken_from_another_app(monkeypatch, workspace):
     monkeypatch.setattr(studio, "require_python", lambda: Path("python"))
     with socket.socket() as listener:
         listener.bind(("127.0.0.1", 0))
+        listener.listen()
         port = listener.getsockname()[1]
         with pytest.raises(ValueError, match="already in use"):
             studio.run(argparse.Namespace(port=port, plain=False))
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX TIME_WAIT restart semantics")
+def test_recent_connection_does_not_block_restarting_a_stopped_app(
+    monkeypatch, workspace
+):
+    monkeypatch.setattr(studio, "require_python", lambda: Path("prepared-python"))
+    calls = []
+    monkeypatch.setattr(
+        subprocess, "run", lambda command, **_kwargs: calls.append(command)
+    )
+    with socket.socket() as listener:
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind(("127.0.0.1", 0))
+        listener.listen()
+        port = listener.getsockname()[1]
+        with socket.create_connection(("127.0.0.1", port)) as client:
+            connection, _ = listener.accept()
+            connection.shutdown(socket.SHUT_WR)
+            connection.close()
+            assert client.recv(1) == b""
+    # The server closed first, leaving a real recent connection in TIME_WAIT.
+    # A plain bind recreates the student's original false port-conflict error.
+    with socket.socket() as unreusable:
+        with pytest.raises(OSError):
+            unreusable.bind(("127.0.0.1", port))
+    studio.run(argparse.Namespace(port=port, plain=True))
+    assert len(calls) == 1
+    assert calls[0][calls[0].index("--port") + 1] == str(port)
 
 
 def test_run_uses_explicit_factory_and_loopback_settings(monkeypatch, workspace):
