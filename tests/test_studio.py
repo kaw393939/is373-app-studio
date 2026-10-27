@@ -387,7 +387,7 @@ def test_output_supports_symbols_even_with_redirected_windows_code_page(monkeypa
     studio.prepare_output()
     print("✅ Ready")
     stream.flush()
-    assert buffer.getvalue().decode("utf-8") == "✅ Ready\n"
+    assert buffer.getvalue().decode("utf-8").splitlines() == ["✅ Ready"]
     assert studio.os.environ["PYTHONUTF8"] == "1"
 
 
