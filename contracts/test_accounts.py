@@ -186,6 +186,23 @@ def test_accounts_survive_an_app_restart(client, settings):
         assert restarted.get("/api/me").json()["username"] == "learner"
 
 
+def test_unicode_csrf_form_values_are_rejected_without_mutation(client, settings):
+    """Actual HTML handlers should recover from malformed tokens rather than 500."""
+    assert client.get("/signup").status_code == 200
+    response = client.post(
+        "/signup", data={**credentials(), "csrf_token": "é"}, follow_redirects=False
+    )
+    assert response.status_code == 403
+    with database.connect(settings) as connection:
+        assert connection.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 0
+    register(client)
+    response = client.post(
+        "/login", data={**credentials(), "csrf_token": "é"}, follow_redirects=False
+    )
+    assert response.status_code == 403
+    assert client.get("/api/me").status_code == 401
+
+
 def test_browser_forms_have_a_recoverable_signup_login_logout_path(client):
     """HTML navigation reaches the same guarded services as the JSON endpoints."""
     assert (

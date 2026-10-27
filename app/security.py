@@ -165,13 +165,15 @@ def require_csrf(request: Request, supplied: str | None) -> None:
         raise HTTPException(403, "Refresh this page and try again.")
     if request.headers.get("sec-fetch-site") == "cross-site":
         raise HTTPException(403, "Refresh this page and try again.")
-    row = _request_session(request)
     if (
-        not row
+        not isinstance(supplied, str)
         or not supplied
         or len(supplied) > 128
-        or not secrets.compare_digest(row["csrf_token"], supplied)
+        or not supplied.isascii()
     ):
+        raise HTTPException(403, "Refresh this page and try again.")
+    row = _request_session(request)
+    if not row or not secrets.compare_digest(row["csrf_token"], supplied):
         raise HTTPException(403, "Refresh this page and try again.")
 
 
