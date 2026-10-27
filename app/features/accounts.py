@@ -101,6 +101,7 @@ def login_page(request: Request) -> Response:
 @router.post("/signup")
 async def signup_form(request: Request) -> Response:
     """Keep browser failures in the form where the student can recover."""
+    credentials = None
     try:
         credentials = await _form_credentials(request, SignupInput)
         security.limit_signup(request)
@@ -119,7 +120,11 @@ async def signup_form(request: Request) -> Response:
         )
     except HTTPException as error:
         return account_page(
-            request, "signup.html", status_code=error.status_code, error=error.detail
+            request,
+            "signup.html",
+            status_code=error.status_code,
+            error=error.detail,
+            username=credentials.username if credentials else "",
         )
     return RedirectResponse("/login?created=1", status_code=303)
 
@@ -128,6 +133,7 @@ async def signup_form(request: Request) -> Response:
 async def login_form(request: Request) -> Response:
     """Rotate the session only after CSRF and credentials have been checked."""
     response = RedirectResponse("/dashboard", status_code=303)
+    credentials = None
     try:
         credentials = await _form_credentials(request, LoginInput)
         await run_in_threadpool(
@@ -146,7 +152,11 @@ async def login_form(request: Request) -> Response:
         )
     except HTTPException as error:
         return account_page(
-            request, "login.html", status_code=error.status_code, error=error.detail
+            request,
+            "login.html",
+            status_code=error.status_code,
+            error=error.detail,
+            username=credentials.username if credentials else "",
         )
     return response
 
