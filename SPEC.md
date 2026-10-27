@@ -1,15 +1,16 @@
-# App Studio decisions
+# Instructor reference · through APP-001
 
-The durable agreement between learner and AI. Update only agreed decisions and
-actual evidence; pending is a valid state. Keep explanations/help in
-[LEARNING.md](LEARNING.md), not a second copy here.
+This branch is one cumulative instructor worked example. Its implemented code
+is available for comparison; it is not a student's chosen scope or proof of
+student completion. Learner decisions and LEARNING.md records remain pending.
 
 ## Current stage
 
-- **Current feature:** APP-001.
-- **Status:** Neutral foundation; learner scope and decisions pending.
-- **Next step:** Confirm the local clone and SSH origin, run setup and try the page.
-- **Implementation marker:** `studio.json` starts at `implemented_through: 0`.
+- **Reference implemented through:** APP-001.
+- **Status:** Instructor worked example; learner decisions and records are pending.
+- **Next step:** Compare a relevant part upstream with your coach. Do not check
+  this branch out over your own work or copy its learner evidence.
+- **Implementation marker:** `studio.json` has `implemented_through: 1`.
 
 This repository owns application code. Server/proxy changes and production
 deployment are outside these three local-development lessons. Prepared helpers
