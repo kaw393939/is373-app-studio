@@ -1,6 +1,7 @@
 """Evidence safety, local refresh and command behavior without claiming learner understanding."""
 
 import argparse
+import io
 import json
 from pathlib import Path
 import socket
@@ -267,6 +268,7 @@ def test_run_uses_explicit_factory_and_loopback_settings(monkeypatch, workspace)
     command, options = calls[0]
     assert "app.main:create_app" in command
     assert "--factory" in command
+    assert "--no-access-log" in command
     assert command[command.index("--host") + 1] == "127.0.0.1"
     assert "--reload" not in command
     assert options["env"]["APP_ORIGIN"] == f"http://127.0.0.1:{port}"
@@ -345,6 +347,48 @@ def test_failed_full_check_removes_previous_receipt(monkeypatch, workspace):
     with pytest.raises(ValueError, match="Checks failed"):
         studio.check(argparse.Namespace(lesson="APP-001", fast=False))
     assert not (workspace / "runtime/check-APP-001.json").exists()
+
+
+def test_failed_earlier_full_check_cannot_reuse_later_receipt(monkeypatch, workspace):
+    (workspace / "studio.json").write_text('{"implemented_through": 3}\n')
+    progress.record_check(3, progress.source_fingerprint())
+    assert progress.check_evidence("APP-001")["current"]
+    monkeypatch.setattr(studio, "require_python", lambda: Path("python"))
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_kwargs: subprocess.CompletedProcess(command, 1),
+    )
+    with pytest.raises(ValueError, match="Checks failed"):
+        studio.check(argparse.Namespace(lesson="APP-001", fast=False))
+    assert not progress.check_evidence("APP-001")["current"]
+
+
+def test_missing_environment_full_attempt_invalidates_previous_receipt(
+    monkeypatch, workspace
+):
+    progress.record_check(3, progress.source_fingerprint())
+    monkeypatch.setattr(
+        studio,
+        "require_python",
+        lambda: (_ for _ in ()).throw(ValueError("Missing environment")),
+    )
+    with pytest.raises(ValueError, match="Missing environment"):
+        studio.check(argparse.Namespace(lesson="APP-001", fast=False))
+    assert not list(progress.STATE.glob("check-*.json"))
+
+
+def test_output_supports_symbols_even_with_redirected_windows_code_page(monkeypatch):
+    buffer = io.BytesIO()
+    stream = io.TextIOWrapper(buffer, encoding="cp1252")
+    monkeypatch.setattr(studio.sys, "stdout", stream)
+    monkeypatch.setattr(studio.sys, "stderr", stream)
+    monkeypatch.delenv("PYTHONUTF8", raising=False)
+    studio.prepare_output()
+    print("✅ Ready")
+    stream.flush()
+    assert buffer.getvalue().decode("utf-8") == "✅ Ready\n"
+    assert studio.os.environ["PYTHONUTF8"] == "1"
 
 
 def test_closed_issue_and_good_records_are_not_enough_without_current_checks(
