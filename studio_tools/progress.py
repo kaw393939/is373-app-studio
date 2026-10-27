@@ -44,7 +44,7 @@ def save_json(path, value):
 def configuration():
     """A student can start without a configured issue or a pasted GitHub token."""
     path = STATE / "progress.json"
-    return json.loads(path.read_text()) if path.exists() else {}
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
 def source_fingerprint():
@@ -88,7 +88,7 @@ def record_check(level, fingerprint):
 def check_evidence(lesson):
     """A foundation pass never stands in for unfinished feature contracts."""
     required = lesson_number(lesson)
-    stage_document = json.loads((ROOT / "studio.json").read_text())
+    stage_document = json.loads((ROOT / "studio.json").read_text(encoding="utf-8"))
     declared = (
         stage_document.get("implemented_through")
         if isinstance(stage_document, dict)
@@ -104,7 +104,7 @@ def check_evidence(lesson):
     for level in range(3, required - 1, -1):
         path = STATE / f"check-APP-{level:03}.json"
         if path.exists():
-            report = json.loads(path.read_text())
+            report = json.loads(path.read_text(encoding="utf-8"))
             if (
                 report.get("status") == "passed"
                 and report.get("implemented_through", 0) >= required
@@ -269,7 +269,9 @@ def publication_state(remote):
 def status(lesson, online=True):
     """Combine independent technical, learner-record and publication observations."""
     repo = repository()
-    records = learner_sections((ROOT / "LEARNING.md").read_text(), lesson)
+    records = learner_sections(
+        (ROOT / "LEARNING.md").read_text(encoding="utf-8"), lesson
+    )
     checks = check_evidence(lesson)
     remote = (
         github_evidence(configuration(), repo, lesson)

@@ -15,6 +15,14 @@ from studio_tools import progress
 ROOT = Path(__file__).resolve().parent
 
 
+def prepare_output():
+    """Keep helpful symbols readable in Windows terminals and redirected CI output."""
+    os.environ.setdefault("PYTHONUTF8", "1")
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+
+
 def environment_python():
     """Resolve this clone's Python without requiring shell activation."""
     return (
@@ -78,6 +86,7 @@ def run(args):
         "uvicorn",
         "app.main:create_app",
         "--factory",
+        "--no-access-log",
         "--host",
         "127.0.0.1",
         "--port",
@@ -100,7 +109,7 @@ def run(args):
 
 def declared_stage():
     """The starter declares stage zero; only agreed completed stages advance it."""
-    configuration = json.loads((ROOT / "studio.json").read_text())
+    configuration = json.loads((ROOT / "studio.json").read_text(encoding="utf-8"))
     level = (
         configuration.get("implemented_through")
         if isinstance(configuration, dict)
@@ -119,12 +128,12 @@ def declared_stage():
 
 def check(args):
     """Run deterministic checks, keeping foundation and unfinished features distinct."""
+    if not args.fast:
+        for receipt in progress.STATE.glob("check-*.json"):
+            receipt.unlink()
     python = require_python()
     level = progress.lesson_number(args.lesson) if args.lesson else declared_stage()
     selected = f"APP-{level:03}" if level else "foundation"
-    receipt = progress.STATE / f"check-{selected}.json"
-    if not args.fast:
-        receipt.unlink(missing_ok=True)
     fingerprint = progress.source_fingerprint()
     paths = ["app", "studio.py", "studio_tools", "conftest.py", "tests", "contracts"]
     paths = [name for name in paths if (ROOT / name).exists()]
@@ -230,6 +239,7 @@ def user_role(args):
 
 def main():
     """Keep actions explicit and failures actionable without exposing secrets."""
+    prepare_output()
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser(
