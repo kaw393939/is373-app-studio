@@ -42,6 +42,9 @@ for the coach to introduce when you need them.
 4. Let the connected coach check Python **3.12+**, run `python3 studio.py setup`
    and help with actual errors. It prepares the environment, quality tools and
    Chromium. You do not need Node, local Docker, an IDE extension or another agent CLI.
+   On Windows, if your class Python command is `python`, the coach confirms its
+   version and uses it in place of `python3` below; no second Python install is needed.
+
 5. In your original terminal, still in this clone, run:
 
    ```sh
