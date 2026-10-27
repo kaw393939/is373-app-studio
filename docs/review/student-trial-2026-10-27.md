@@ -66,6 +66,7 @@ DACL checks passed; Windows permissions were not inferred from POSIX mode bits.
 
 | Finding | Change and actual follow-through |
 |---|---|
+| The public page can show Sign in instead of a usable template action | README explicitly starts with signing into GitHub. The final public-browser check was logged out; repository administration used the authenticated connector/CLI. |
 | An empty generated repository could look like a broken clone | README waits for files and gives the untouched-clone pull recovery. The first trial exercised it; the retry waited and cloned populated files. |
 | A green foundation could be mistaken for completed accounts | Default output names all pending lessons. Explicit unfinished contracts fail, and status requires the declared stage plus a current full receipt. |
 | “See the next step” was vague on a branded page | Synthetic feedback selected “Explore the idea.” The actual browser reached its explanation. The prepared journey now tests a real destination rather than freezing the original wording; signup/unknown-route rejection remains checked. |

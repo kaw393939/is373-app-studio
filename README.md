@@ -14,7 +14,7 @@ Start locally here. Deployment into your existing server is a later agreed step.
 Work only to the first checkpoint for now. The later sections are references
 for the coach to introduce when you need them.
 
-1. On [this template](https://github.com/kaw393939/is373-app-studio), choose
+1. Sign into GitHub, then on [this template](https://github.com/kaw393939/is373-app-studio), choose
    **Use this template → Create a new repository**. Create a public copy named
    `my-app-studio` in your own account; leave **Include all branches** off.
    Wait until your copy shows its README and files.
